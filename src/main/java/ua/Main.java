@@ -1,74 +1,50 @@
 package ua;
+import ua.io.DataFileReader;
+import ua.exceptions.InvalidDataException;
 
-import ua.model.*;
-import ua.repository.GenericRepository;
-import ua.repository.IdentityExtractor;
+import java.util.logging.Logger;
 
 public class Main {
 
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
+
     public static void main(String[] args) {
 
-        System.out.println("=== ТЕСТ РЕПОЗИТОРІЇВ ===\n");
+        logger.info("Старт програми.");
 
-        
-        GenericRepository<User> userRepo = new GenericRepository<>(User::username);
-        GenericRepository<Post> postRepo = new GenericRepository<>(p -> p.user().username() + "#" + p.postDate());
-        GenericRepository<Comment> commentRepo = new GenericRepository<>(c -> c.user().username() + "#" + c.commentDate());
-        GenericRepository<Message> messageRepo = new GenericRepository<>(m -> m.sender().username() + "->" + m.receiver().username() + "#" + m.sentDate());
-        GenericRepository<FriendRequest> requestRepo = new GenericRepository<>(r -> r.sender().username() + "->" + r.receiver().username());
+        String path = "src/main/resources/data.txt";
 
-        
-        User u1 = User.create("alex", "alex@mail.com");
-        User u2 = User.create("bob", "bob@mail.com");
-        User u3 = User.create("alex", "duplicate@mail.com"); // Дублікат!!! username однаковий
+        try {
+            logger.info("Спроба зчитати файл: " + path);
 
-        Post p1 = Post.create(u1, "Hello world!", PostType.TEXT);
-        Post p2 = Post.create(u2, "Image post", PostType.IMAGE);
+            var result = DataFileReader.readData(path);
 
-        Comment c1 = Comment.create(u1, "Nice post!");
-        Comment c2 = Comment.create(u2, "Cool!");
+            logger.info("Файл успішно зчитано.");
 
-        Message m1 = Message.create(u1, u2, "Hi Bob!");
-        Message m2 = Message.create(u2, u1, "Hi Alex!");
+            System.out.println("\n=== USERS ===");
+            result.users().forEach(System.out::println);
 
-        FriendRequest fr1 = FriendRequest.create(u1, u2);
-        FriendRequest fr2 = FriendRequest.create(u2, u1);
+            System.out.println("\n=== POSTS ===");
+            result.posts().forEach(System.out::println);
 
-       
-        userRepo.add(u1);
-        userRepo.add(u2);
-        userRepo.add(u3); 
+            System.out.println("\n=== COMMENTS ===");
+            result.comments().forEach(System.out::println);
 
-        postRepo.add(p1);
-        postRepo.add(p2);
+            System.out.println("\n=== MESSAGES ===");
+            result.messages().forEach(System.out::println);
 
-        commentRepo.add(c1);
-        commentRepo.add(c2);
+            System.out.println("\n=== REQUESTS ===");
+            result.requests().forEach(System.out::println);
 
-        messageRepo.add(m1);
-        messageRepo.add(m2);
+        } catch (InvalidDataException e) {
 
-        requestRepo.add(fr1);
-        requestRepo.add(fr2);
+            logger.severe("Помилка при зчитуванні даних: " + e.getMessage());
+            System.out.println("Помилка: " + e.getMessage());
 
-        
-        System.out.println("\n=== Пошук користувача за identity 'alex' ===");
-        System.out.println(userRepo.findByIdentity("alex"));
+        } finally {
 
-        
-        System.out.println("\n=== USERS ===");
-        userRepo.getAll().forEach(System.out::println);
+            logger.info("Програма завершилася.");
 
-        System.out.println("\n=== POSTS ===");
-        postRepo.getAll().forEach(System.out::println);
-
-        System.out.println("\n=== COMMENTS ===");
-        commentRepo.getAll().forEach(System.out::println);
-
-        System.out.println("\n=== MESSAGES ===");
-        messageRepo.getAll().forEach(System.out::println);
-
-        System.out.println("\n=== FRIEND REQUESTS ===");
-        requestRepo.getAll().forEach(System.out::println);
+        }
     }
 }
