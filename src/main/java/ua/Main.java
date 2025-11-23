@@ -10,14 +10,14 @@ public class Main {
 
         System.out.println("=== ТЕСТ РЕПОЗИТОРІЇВ ===\n");
 
-        // ▓▓▓ 1. Створюємо репозиторії
+        
         GenericRepository<User> userRepo = new GenericRepository<>(User::username);
         GenericRepository<Post> postRepo = new GenericRepository<>(p -> p.user().username() + "#" + p.postDate());
         GenericRepository<Comment> commentRepo = new GenericRepository<>(c -> c.user().username() + "#" + c.commentDate());
         GenericRepository<Message> messageRepo = new GenericRepository<>(m -> m.sender().username() + "->" + m.receiver().username() + "#" + m.sentDate());
         GenericRepository<FriendRequest> requestRepo = new GenericRepository<>(r -> r.sender().username() + "->" + r.receiver().username());
 
-        // ▓▓▓ 2. Створюємо об'єкти
+        
         User u1 = User.create("alex", "alex@mail.com");
         User u2 = User.create("bob", "bob@mail.com");
         User u3 = User.create("alex", "duplicate@mail.com"); // Дублікат!!! username однаковий
@@ -34,10 +34,10 @@ public class Main {
         FriendRequest fr1 = FriendRequest.create(u1, u2);
         FriendRequest fr2 = FriendRequest.create(u2, u1);
 
-        // ▓▓▓ 3. Додавання в репозиторії (з логуванням)
+       
         userRepo.add(u1);
         userRepo.add(u2);
-        userRepo.add(u3); // дубль → лог Warning
+        userRepo.add(u3); 
 
         postRepo.add(p1);
         postRepo.add(p2);
@@ -51,11 +51,11 @@ public class Main {
         requestRepo.add(fr1);
         requestRepo.add(fr2);
 
-        // ▓▓▓ 4. Пошук за identity
+        
         System.out.println("\n=== Пошук користувача за identity 'alex' ===");
         System.out.println(userRepo.findByIdentity("alex"));
 
-        // ▓▓▓ 5. Виведення всіх даних
+        
         System.out.println("\n=== USERS ===");
         userRepo.getAll().forEach(System.out::println);
 
