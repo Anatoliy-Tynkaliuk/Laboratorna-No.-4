@@ -20,7 +20,7 @@ public class Main {
 
         User u1 = User.create("alex", "alex@mail.com");
         User u2 = User.create("bob", "bob@mail.com");
-        User u3 = User.create("alex", "duplicate@mail.com"); // Дублікат!!! username однаковий
+        User u3 = User.create("alex", "duplicate@mail.com"); 
 
         Post p1 = Post.create(u1, "Hello world!", PostType.TEXT);
         Post p2 = Post.create(u2, "Image post", PostType.IMAGE);
