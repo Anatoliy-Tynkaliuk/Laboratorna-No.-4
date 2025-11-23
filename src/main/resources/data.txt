@@ -1,0 +1,17 @@
+USER;petro;petro@mail.com
+USER;ivan;wrong_email        
+
+POST;petro;Hello world!;TEXT
+POST;ivan;photo.jpg;IMAGE
+POST;ivan;;IMAGE            
+
+COMMENT;petro;Nice job!
+COMMENT; ;Empty user        
+
+MESSAGE;petro;ivan;Hello!
+MESSAGE;ivan;petro;Hi!
+MESSAGE;ivan;;No receiver    
+
+REQUEST;petro;ivan;PENDING
+REQUEST;ivan;taras;ACCEPTED
+REQUEST;taras;petro;WRONG    
